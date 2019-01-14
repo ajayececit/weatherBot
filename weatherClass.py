@@ -6,12 +6,12 @@ import json
 class forecastByCity(object):
     
     def __init__(self, location ,count):
-        openWeatherAPI_key = "f0983710160711b7b3010621ea077e80"
+        openWeatherAPI_key = {YOUR_API}
         openForecastUrl= "http://api.openweathermap.org/data/2.5/forecast?"
         if (location.find("@#$") == -1):
             openForecastByCity = openForecastUrl + "q=" + location + "&APPID=" + openWeatherAPI_key
         else:
-            locationSplit = location.split("@#$")
+            locationSplit = location.split("/")
             latlonConcatenate = "lat=" + locationSplit[0] + "&lon=" + locationSplit[1]                               
             openForecastByCity = openForecastUrl + latlonConcatenate + "&APPID=" + openWeatherAPI_key
             
