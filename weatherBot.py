@@ -23,8 +23,6 @@ defaultEmoji = u'\U0001F300'    # default emojis
 
 degree_sign= u'\N{DEGREE SIGN}' # degree sign
 
-footer = "------------------------------------------------------------------"
-
 forecastList = []
 print ("bfre class")
 
@@ -57,7 +55,7 @@ def handle_command_testMessage(message):
                 bot.register_next_step_handler(echo, handle_Location)
             
     if(message.text == "/help"):
-        bot.send_message(chat_id=message.chat.id,text = "test success")
+        bot.send_message(chat_id=message.chat.id,text = "Send a command /start")
         
 @bot.message_handler(content_types=['location'])
 def handle_Location(message):
@@ -69,9 +67,8 @@ def handle_Location(message):
     def handle_command_weather(message):
         if(message.text == "Current Weather"):
             weatherOutput = extractDetails(locToPass)
-            bot.reply_to(message, text = weatherOutput)
-            bot.send_message(chat_id=message.chat.id,text = footer ,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
-        
+            bot.reply_to(message, text = weatherOutput,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
+            
     @bot.message_handler(regexp='ForeCast')
     def handle_command_weather(message):
         if(message.text == "ForeCast"):
@@ -79,9 +76,8 @@ def handle_Location(message):
             forecastOutput = extractForecastDetails(locToPass)
             forecastSplit = forecastOutput[0:3]
             forecastToSend = forecastSplit[0] + forecastSplit [1] + forecastSplit[2]
-            bot.reply_to(message, text = forecastToSend)
-            bot.send_message(chat_id=message.chat.id,text = footer ,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
-        
+            bot.reply_to(message, text = forecastToSend,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
+            
     @bot.message_handler(regexp='<<Back')
     def handle_command_weather(message):
         if(message.text == "<<Back"):
@@ -95,9 +91,8 @@ def processByCityName(message):
     def handle_command_weather(message):
         if(message.text == "Current Weather"):
             weatherOutput = extractDetails(cityName)
-            bot.reply_to(message, text = weatherOutput)
-            bot.send_message(chat_id=message.chat.id,text = footer ,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
-        
+            bot.reply_to(message, text = weatherOutput,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
+           
     @bot.message_handler(regexp='ForeCast')
     def handle_command_weather(message):
         if(message.text == "ForeCast"):
@@ -105,9 +100,8 @@ def processByCityName(message):
             forecastOutput = extractForecastDetails(cityName)
             forecastSplit = forecastOutput[0:3]
             forecastToSend = forecastSplit[0] + forecastSplit [1] + forecastSplit[2]
-            bot.reply_to(message, text = forecastToSend)
-            bot.send_message(chat_id=message.chat.id,text = footer ,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
-        
+            bot.reply_to(message, text = forecastToSend,reply_markup=weatherInputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
+            
     @bot.message_handler(regexp='<<Back')
     def handle_command_weather(message):
         if(message.text == "<<Back"):
