@@ -5,7 +5,7 @@ from telebot import types
 import telegram
 from weatherClass import forecastByCity
 from weatherClass import currentWeatherByCity
-bot_token = "636067336:AAFXGEEn9IG_qU8BNqpJnQKpTVzOvyA_6rY"
+bot_token = {BOT_TOKEN}
 bot = telebot.TeleBot(bot_token)
 
 # Unicodes for Emoji for respective weather code
@@ -63,7 +63,7 @@ def handle_command_testMessage(message):
 def handle_Location(message):
     lat = str(message.location.latitude)
     lon = str(message.location.longitude)
-    locToPass = lat + "@#$" + lon
+    locToPass = lat + "/" + lon
     bot.reply_to(message, text = "Please select the required" ,reply_markup=inputKeyboard(), parse_mode=telegram.ParseMode.MARKDOWN)
     @bot.message_handler(regexp='Current Weather')
     def handle_command_weather(message):
