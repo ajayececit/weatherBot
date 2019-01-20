@@ -1,12 +1,13 @@
 
 
+
 import telebot
 from telegram import ReplyKeyboardMarkup
 from telebot import types
 import telegram
 from weatherClass import forecastByCity
 from weatherClass import currentWeatherByCity
-bot_token = {BOT_TOKEN}
+bot_token = {BOT-TOKEN}
 bot = telebot.TeleBot(bot_token)
 degree_sign= u'\N{DEGREE SIGN}' # degree sign
 
@@ -72,7 +73,9 @@ class botClass(object):
                     bot.send_message(chat_id=message.chat.id, text = "Please Provide the proper input Name with country code\nEg:Bangalore,IN",reply_markup=keyBoardClass.startKeypad(), parse_mode=telegram.ParseMode.MARKDOWN)
                 else:
                     extractionClass = currentWeatherByCity(cityName)
-                    weatherOutput = extractionClass.weatherOutput    
+                    weatherOutput = extractionClass.weatherOutput
+                    if (weatherOutput == "City not found"):
+                        weatherOutput = "Error..!! \nPlease check the city name, Given city not found"
                     bot.send_message(chat_id=message.chat.id, text = weatherOutput,reply_markup=keyBoardClass.startKeypad(), parse_mode=telegram.ParseMode.MARKDOWN)
     
             @bot.message_handler(regexp='ForeCast')
@@ -117,6 +120,8 @@ class botClass(object):
                         count = count + 8
                     forecastSplit = forecastList[0:3]
                     forecastToSend = forecastSplit[0] + forecastSplit [1] + forecastSplit[2]
+                    if (forecastToSend.find("City not found") != -1):
+                        forecastToSend = "Error..!! \nPlease check the city name, Given city not found"
                     bot.send_message(chat_id=message.chat.id, text = forecastToSend,reply_markup=keyBoardClass.startKeypad(), parse_mode=telegram.ParseMode.MARKDOWN)
     bot.polling()
 if __name__ == '__main__':
