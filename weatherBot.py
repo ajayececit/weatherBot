@@ -1,6 +1,4 @@
 
-
-
 import telebot
 from telegram import ReplyKeyboardMarkup
 from telebot import types
