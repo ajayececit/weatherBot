@@ -1,5 +1,6 @@
 
 
+
 import requests
 import pandas as pd
 import json
@@ -7,7 +8,7 @@ import json
 degree_sign= u'\N{DEGREE SIGN}' # degree sign
 class forecastByCity(object):
     def __init__(self, location ,count):
-        openWeatherAPI_key = {API_TOKEN}
+        openWeatherAPI_key = "f0983710160711b7b3010621ea077e80"
         openForecastUrl= "http://api.openweathermap.org/data/2.5/forecast?"
         if (location.find("@#$") == -1):
             openForecastByCity = openForecastUrl + "q=" + location + "&APPID=" + openWeatherAPI_key
@@ -33,7 +34,7 @@ class forecastByCity(object):
         elif(forecastData.status_code == 401):
             self.forecastCollection = "Issue with API key"
         elif(forecastData.status_code == 404):
-            self.forecastCollection = "Page not found"        
+            self.forecastCollection = "City not found"        
     
     def __forecastCode(self,count):
         forecastTable = self.forecastJson["list"]
@@ -88,7 +89,6 @@ class forecastByCity(object):
     
 class currentWeatherByCity(object):
     def __init__(self, location): 
-        print(location)
         openWeatherAPI_key = "f0983710160711b7b3010621ea077e80"
         openWeatherUrl= "http://api.openweathermap.org/data/2.5/weather?"
         if (location.find("@#$") == -1):
@@ -103,7 +103,6 @@ class currentWeatherByCity(object):
             self.weatherJson = weatherData.json()  
             self.weatherCode = self.__weatherCode()
             self.weatherDescription = self.__weatherDescription()
-            print(self.weatherCode)
             emojiClass = emoji(self.weatherCode)
             self.weatherEmoji = emojiClass.smiley
             self.currentTemp = str(self.__currentTemp())
