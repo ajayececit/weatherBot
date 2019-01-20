@@ -1,17 +1,18 @@
 
+
 import requests
 import pandas as pd
 import json
 
+degree_sign= u'\N{DEGREE SIGN}' # degree sign
 class forecastByCity(object):
-    
     def __init__(self, location ,count):
-        openWeatherAPI_key = {YOUR_API}
+        openWeatherAPI_key = {API_TOKEN}
         openForecastUrl= "http://api.openweathermap.org/data/2.5/forecast?"
         if (location.find("@#$") == -1):
             openForecastByCity = openForecastUrl + "q=" + location + "&APPID=" + openWeatherAPI_key
         else:
-            locationSplit = location.split("/")
+            locationSplit = location.split("@#$")
             latlonConcatenate = "lat=" + locationSplit[0] + "&lon=" + locationSplit[1]                               
             openForecastByCity = openForecastUrl + latlonConcatenate + "&APPID=" + openWeatherAPI_key
             
@@ -19,18 +20,20 @@ class forecastByCity(object):
         if (forecastData.status_code ==  200):            
             self.forecastJson = forecastData.json() 
             self.forecastCode = self.__forecastCode(count)
-            self.forecastDescription = self.__forecastDescription(count)
-            self.currentTemp = self.__currentTemp(count)
-            self.maxTemp = self.__maxTemp(count)
-            self.minTemp = self.__minTemp(count)
-            self.humidity= self.__humidity(count)
-            self.windSpeed = self.__windSpeed(count)
-            self.date = self.__date(count)
+            emojiClass = emoji(self.forecastCode)
+            self.weatherEmoji = emojiClass.smiley
+            self.forecastDescription = str(self.__forecastDescription(count))
+            self.maxTemp = str(self.__maxTemp(count))
+            self.minTemp = str(self.__minTemp(count))
+            self.humidity= str(self.__humidity(count))
+            self.windSpeed = str(self.__windSpeed(count))
+            self.date = str(self.__date(count))
+            self.forecastCollection = "\nThe weather Report on Date : " + self.date + "\nWeather : " + self.forecastDescription + " " + self.weatherEmoji + "\n->Max/Min Temp : " + self.maxTemp + degree_sign + "C/" + self.minTemp + degree_sign + "C" + "\n-> Humidity : " + self.humidity + "\n-> Wind Speed : " + self.windSpeed + "\n"            
 
         elif(forecastData.status_code == 401):
-            return "Issue with API key"
+            self.forecastCollection = "Issue with API key"
         elif(forecastData.status_code == 404):
-            return "Page not found"        
+            self.forecastCollection = "Page not found"        
     
     def __forecastCode(self,count):
         forecastTable = self.forecastJson["list"]
@@ -84,7 +87,8 @@ class forecastByCity(object):
         return date[0]
     
 class currentWeatherByCity(object):
-    def __init__(self, location):        
+    def __init__(self, location): 
+        print(location)
         openWeatherAPI_key = "f0983710160711b7b3010621ea077e80"
         openWeatherUrl= "http://api.openweathermap.org/data/2.5/weather?"
         if (location.find("@#$") == -1):
@@ -99,15 +103,19 @@ class currentWeatherByCity(object):
             self.weatherJson = weatherData.json()  
             self.weatherCode = self.__weatherCode()
             self.weatherDescription = self.__weatherDescription()
-            self.currentTemp = self.__currentTemp()
-            self.maxTemp = self.__maxTemp()
-            self.minTemp = self.__minTemp()
-            self.humidity= self.__humidity()
-            self.windSpeed = self.__windSpeed()
+            print(self.weatherCode)
+            emojiClass = emoji(self.weatherCode)
+            self.weatherEmoji = emojiClass.smiley
+            self.currentTemp = str(self.__currentTemp())
+            self.maxTemp = str(self.__maxTemp())
+            self.minTemp = str(self.__minTemp())
+            self.humidity= str(self.__humidity())
+            self.windSpeed = str(self.__windSpeed())
+            self.weatherOutput = "Weather : " + self.weatherDescription + " " + self.weatherEmoji  + "\n-> Current Temperature : " + self.currentTemp + degree_sign + "C" + "\n-> Max/Min Temperature : " + self.maxTemp + degree_sign + "C" + "/" + self.minTemp + degree_sign + "C" + "\n-> Humidity : " + self.humidity + "\n-> Wind Speed : " + self.windSpeed
         elif(weatherData.status_code == 401):
-            return "Issue with API key"
+            self.weatherOutput = "Issue with API key"
         elif(weatherData.status_code == 404):
-            return "Page not found"
+            self.weatherOutput = "City not found"
         
     def __weatherCode(self):
         weatherTable = self.weatherJson["weather"]
@@ -133,5 +141,45 @@ class currentWeatherByCity(object):
     
     def __windSpeed(self):
         return (self.weatherJson['wind']['speed'])
+    
+class emoji(object):
+    
+    def __init__(self, weatherCode):
+        self.smiley = self.__getSmiley(weatherCode)       
+        
+    def __getSmiley(self,weatherCode):
+        # Unicodes for Emoji for respective weather code
+        thunderstorm = u'\U0001F4A8'    # Code: 200's, 900, 901, 902, 905
+        drizzle = u'\U0001F4A7'         # Code: 300's
+        rain = u'\U00002614'            # Code: 500's
+        snowflake = u'\U00002744'       # Code: 600's snowflake
+        snowman = u'\U000026C4'         # Code: 600's snowman, 903, 906
+        atmosphere = u'\U0001F301'      # Code: 700's foogy
+        clearSky = u'\U00002600'        # Code: 800 clear sky
+        fewClouds = u'\U000026C5'       # Code: 801 sun behind clouds
+        clouds = u'\U00002601'          # Code: 802-803-804 clouds general
+        hot = u'\U0001F525'             # Code: 904
+        defaultEmoji = u'\U0001F300'    # default emojis
+        if (weatherCode):
+            if str(weatherCode)[0] == '2' or weatherCode == 900 or weatherCode==901 or weatherCode==902 or weatherCode==905:
+                return thunderstorm
+            elif str(weatherCode)[0] == '3':
+                return drizzle
+            elif str(weatherCode)[0] == '5':
+                return rain
+            elif str(weatherCode)[0] == '6' or weatherCode==903 or weatherCode== 906:
+                return snowflake + ' ' + snowman
+            elif str(weatherCode)[0] == '7':
+                return atmosphere
+            elif weatherCode == 800:
+                return clearSky
+            elif weatherCode == 801:
+                return fewClouds
+            elif weatherCode==802 or weatherCode==803 or weatherCode==803:
+                return clouds
+            elif weatherCode == 904:
+                return hot    
+        else:
+            return defaultEmoji
     
     
