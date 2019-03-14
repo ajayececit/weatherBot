@@ -87,7 +87,7 @@ class forecastByCity(object):
     
 class currentWeatherByCity(object):
     def __init__(self, location): 
-        openWeatherAPI_key = "f0983710160711b7b3010621ea077e80"
+        openWeatherAPI_key = "API_KEY"
         openWeatherUrl= "http://api.openweathermap.org/data/2.5/weather?"
         if (location.find("@#$") == -1):
             openWeatherByCity = openWeatherUrl + "q=" + location + "&APPID=" + openWeatherAPI_key
